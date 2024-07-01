@@ -1,3 +1,5 @@
+import sys
+import os
 import librosa
 import matplotlib.pyplot as plt
 import numpy as np
@@ -67,7 +69,7 @@ def plot_analysis_results(results, output_path):
     plt.savefig(output_path)
     plt.close()
 
-def main(file_path, output_path):
+def main(file_path):
     y, sr = load_audio(file_path)
 
     pitch_librosa = analyze_pitch_with_librosa(y, sr)
@@ -88,9 +90,22 @@ def main(file_path, output_path):
         "Vibrato (Pitch)": vibrato
     }
 
+    # Create results directory if it doesn't exist
+    if not os.path.exists('results'):
+        os.makedirs('results')
+
+    # Determine the next available result file number
+    result_files = os.listdir('results')
+    next_index = len(result_files) + 1
+    output_path = f"results/analysis_results_{next_index}.png"
+
     plot_analysis_results(results, output_path)
 
-# Example usage
-file_path = "../../../FULL/female/female3/arpeggios/slow_piano/f3_arpeggios_c_slow_piano_u.wav"
-output_path = "analysis_results.png"
-main(file_path, output_path)
+    return output_path
+
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("Usage: python analyze_audio.py <file_path>")
+    else:
+        file_path = sys.argv[1]
+        main(file_path)
