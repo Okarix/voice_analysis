@@ -49,32 +49,28 @@ def analyze_vibrato(y, sr):
     pitch = pitch[pitch > 0]  # Filter out non-positive pitches
     return pitch
 
-def plot_analysis_results(results):
+def plot_analysis_results(results, output_path):
     num_plots = len(results)
     fig, axs = plt.subplots(num_plots, 1, figsize=(10, 2 * num_plots))
-    plt.subplots_adjust(hspace=0.8)  # Увеличим расстояние между графиками
+    plt.subplots_adjust(hspace=0.8)
     
     for i, (title, data) in enumerate(results.items()):
         axs[i].plot(data)
-        axs[i].set_title(title, fontsize=8, loc='left', x=0.51)   # Уменьшим размер шрифта заголовков
-        axs[i].tick_params(axis='both', which='major', labelsize=6)  # Уменьшим размер шрифта меток
-        
-        # Автоматическая подгонка шрифтов
-        axs[i].title.set_fontsize(10)  # Стандартный размер шрифта для заголовков
-        axs[i].title.set_size(8)  # Установим размер шрифта для заголовков
-        axs[i].xaxis.label.set_size(6)  # Установим размер шрифта для оси X
-        axs[i].yaxis.label.set_size(6)  # Установим размер шрифта для оси Y
+        axs[i].set_title(title, fontsize=8, loc='left', x=0.51)
+        axs[i].tick_params(axis='both', which='major', labelsize=6)
+        axs[i].title.set_fontsize(10)
+        axs[i].title.set_size(8)
+        axs[i].xaxis.label.set_size(6)
+        axs[i].yaxis.label.set_size(6)
 
     plt.tight_layout()
-    plt.show()
+    plt.savefig(output_path)
+    plt.close()
 
-def main(file_path):
+def main(file_path, output_path):
     y, sr = load_audio(file_path)
 
-    # Analyze pitch using librosa
     pitch_librosa = analyze_pitch_with_librosa(y, sr)
-
-    # Analyze other characteristics
     timbre = analyze_timbre(y, sr)
     dynamics = analyze_dynamics(y)
     articulation = analyze_articulation(file_path)
@@ -82,7 +78,6 @@ def main(file_path):
     breath_control = analyze_breath_control(y, sr)
     vibrato = analyze_vibrato(y, sr)
 
-    # Prepare results for plotting
     results = {
         "Pitch (Librosa)": pitch_librosa,
         "Timbre (Spectral Centroid)": timbre[0],
@@ -93,9 +88,9 @@ def main(file_path):
         "Vibrato (Pitch)": vibrato
     }
 
-    # Plot results
-    plot_analysis_results(results)
+    plot_analysis_results(results, output_path)
 
 # Example usage
 file_path = "../../../FULL/female/female3/arpeggios/slow_piano/f3_arpeggios_c_slow_piano_u.wav"
-main(file_path)
+output_path = "analysis_results.png"
+main(file_path, output_path)
