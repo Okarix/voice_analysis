@@ -50,12 +50,21 @@ def analyze_vibrato(y, sr):
     return pitch
 
 def plot_analysis_results(results):
-    fig, axs = plt.subplots(len(results), 1, figsize=(10, 20))
-    plt.subplots_adjust(hspace=0.5)  # Increase space between plots
+    num_plots = len(results)
+    fig, axs = plt.subplots(num_plots, 1, figsize=(10, 2 * num_plots))
+    plt.subplots_adjust(hspace=0.8)  # Увеличим расстояние между графиками
+    
     for i, (title, data) in enumerate(results.items()):
         axs[i].plot(data)
-        axs[i].set_title(title, fontsize=10)
-        axs[i].tick_params(axis='both', which='major', labelsize=8)
+        axs[i].set_title(title, fontsize=8, loc='left', x=0.51)   # Уменьшим размер шрифта заголовков
+        axs[i].tick_params(axis='both', which='major', labelsize=6)  # Уменьшим размер шрифта меток
+        
+        # Автоматическая подгонка шрифтов
+        axs[i].title.set_fontsize(10)  # Стандартный размер шрифта для заголовков
+        axs[i].title.set_size(8)  # Установим размер шрифта для заголовков
+        axs[i].xaxis.label.set_size(6)  # Установим размер шрифта для оси X
+        axs[i].yaxis.label.set_size(6)  # Установим размер шрифта для оси Y
+
     plt.tight_layout()
     plt.show()
 
@@ -88,5 +97,5 @@ def main(file_path):
     plot_analysis_results(results)
 
 # Example usage
-file_path = "../FULL/male/male1/long_tones/straight/m1_long_straight_a.wav"
+file_path = "../../../FULL/female/female3/arpeggios/slow_piano/f3_arpeggios_c_slow_piano_u.wav"
 main(file_path)
